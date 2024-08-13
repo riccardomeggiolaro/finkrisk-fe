@@ -7,6 +7,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DialogService } from '../../services/dialog.service';
 import { DialogData } from '../dialog-content/dialog-content.component';
 import { io, Socket } from 'socket.io-client';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -105,22 +106,31 @@ export class FileUploadComponent {
   async uploadFile(): Promise<void> {
     if (this.selectedFile) {
       this.isUploading = true;
+      this.uploaded = 0;
       this.uploadError = null;
       this.uploadSuccess = false;
       this.uploading = true;
+      const subject = new Subject<void>();
 
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
-      this.googleDriveService.upload(formData).subscribe({
-        next: (data: string) => {
-          console.log('Received', data);
+      this.googleDriveService.upload(formData)
+      .pipe(
+        takeUntil(subject)
+      )
+      .subscribe({
+        next: (data: {progress: number}) => {
+          this.uploaded = data.progress
         },
         error: (err: any) => {
           console.error('Errore ricevuto:', err);
+          subject.next();
+          subject.complete();
         },
         complete: () => {
-          console.log('Stream completato');
+          subject.next();
+          subject.complete();
         }
       });
     }

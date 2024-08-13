@@ -15,8 +15,6 @@ interface UploadResult {
 })
 export class GoogleDriveService {
   private apiUrl = 'http://localhost:3000/api/drive'; // Replace with your API URL
-  public progress$ = new Subject<number>();
-  public upload$ = new Subject<any>();
 
   constructor(private http: HttpClient) { }
 
@@ -38,12 +36,20 @@ export class GoogleDriveService {
           while (true) {
             const { value, done } = await reader.read();
             if (done) break;
-            observer.next(value); // Emettiamo il valore ricevuto
+            const lines = value?.split('\n').filter(line => line.trim() !== '');
+
+            for (const line of lines!) {
+              const jsonMatch = line.match(/data:\s*(\{.*\})/);
+              if (jsonMatch) {
+                const jsonData = JSON.parse(jsonMatch[1]);
+                observer.next(jsonData);
+              } else if (line === 'event: complete') {
+                observer.complete(); // Completiamo l'Observable quando la lettura è terminata
+              }
+            }
           }
         } catch (error) {
           observer.error(error); // Gestiamo gli errori
-        } finally {
-          observer.complete(); // Completiamo l'Observable quando la lettura è terminata
         }
       };
 
