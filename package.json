@@ -1,5 +1,5 @@
 {
-  "name": "finrisk-file-uploader",
+  "name": "finrisk-fe",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
