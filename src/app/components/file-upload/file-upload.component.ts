@@ -6,7 +6,6 @@ import { GoogleDriveService } from '../../services/google-drive.service';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DialogService } from '../../services/dialog.service';
 import { DialogData } from '../dialog-content/dialog-content.component';
-import { io, Socket } from 'socket.io-client';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -28,7 +27,7 @@ export class FileUploadComponent {
     private readonly googleDriveService: GoogleDriveService,
     private readonly dialogService: DialogService) {}
 
-  faCloudUploadAlt = faCloudUploadAlt
+  faCloudUploadAlt = faCloudUploadAlt;
   isDragging = false;
   selectedFile: File | null = null;
   isUploading = false;
@@ -121,7 +120,7 @@ export class FileUploadComponent {
       )
       .subscribe({
         next: (data: {progress: number}) => {
-          this.uploaded = data.progress
+          this.uploaded = data.progress;
         },
         error: (err: any) => {
           console.error('Errore ricevuto:', err);
@@ -129,6 +128,7 @@ export class FileUploadComponent {
           subject.complete();
         },
         complete: () => {
+          this.uploaded = 100;
           subject.next();
           subject.complete();
         }
