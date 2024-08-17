@@ -120,7 +120,7 @@ export class FileUploadComponent {
       )
       .subscribe({
         next: (data: {progress: number}) => {
-          this.uploaded = data.progress;
+          this.uploaded = data.progress < 100 ? data.progress : this.uploaded;
         },
         error: (err: any) => {
           console.error('Errore ricevuto:', err);
