@@ -30,7 +30,7 @@
   <div *ngIf="selectedFile && !uploading" class="selected">
     <span>File selezionato: <strong> {{ getFileName() }} </strong></span>
     <i class="fa fa-trash" aria-hidden="true" (click)="onRemove()"></i>
-    <button (click)="uploadFile()">Carica file</button>
+    <button (click)="loadFile()">Carica file</button>
   </div>
   <div *ngIf="uploading" class="uploaded">
     <mat-progress-bar mode="determinate" [value]="uploaded"></mat-progress-bar>

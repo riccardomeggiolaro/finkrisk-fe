@@ -1,13 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, catchError, map, tap, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
-interface UploadResult {
-  status?: string;
-  percentage?: number;
-  progress?: number;
-  data?: any;
-  level?: number;
+export interface File {
+  id: string;
+  name: string;
 }
 
 @Injectable({
@@ -18,7 +15,7 @@ export class GoogleDriveService {
 
   constructor(private http: HttpClient) { }
 
-  upload(formData: FormData): Observable<any> {
+  create(formData: FormData): Observable<any> {
     return new Observable<string>(observer => {
       const fetchData = async () => {
         const response = await fetch(`${this.apiUrl}/upload`, {
@@ -57,7 +54,7 @@ export class GoogleDriveService {
     });
   }
 
-  async existFile(fileName: string): Promise<{exist: boolean}> {
-    return await this.http.get<{exist: boolean}>(`${this.apiUrl}/exist/${fileName}`).toPromise() as {exist: boolean};
+  async existFile(fileName: string): Promise<{exist: boolean, data: File}> {
+    return await this.http.get<{exist: boolean}>(`${this.apiUrl}/exist/name${fileName}`).toPromise() as {exist: boolean, data: File};
   }
 }

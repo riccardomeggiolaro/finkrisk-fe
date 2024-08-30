@@ -1,5 +1,17 @@
 <h2 mat-dialog-title>{{ data.title }}</h2>
-<mat-dialog-content>{{ data.description }}</mat-dialog-content>
+<mat-dialog-content>
+  <ng-container *ngIf="data.description.length > 1; else singleDescription">
+    <!-- Display each description item as a paragraph -->
+    <div *ngFor="let item of data.description">
+      <p>{{ item }}</p>
+    </div>
+  </ng-container>
+
+  <ng-template #singleDescription>
+    <p>{{ data.description[0] }}</p>
+  </ng-template>
+</mat-dialog-content>
+
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Chiudi</button>
 </mat-dialog-actions>

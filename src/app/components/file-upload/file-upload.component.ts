@@ -61,11 +61,11 @@ export class FileUploadComponent {
       if (!fileJustExist) {
         this.selectedFile = files[0];
       } else {
-        this.openDialog({title: "Ops", description: "E' già stato caricato un file con questo nome sul drive.", type: "error"});
+        this.openDialog({title: "Ops", description: ["E' già stato caricato un file con questo nome sul drive."], type: "error"});
         this.fileInput.nativeElement.value = '';
       }
     } else {
-      this.openDialog({title: "Formato non valido", description: "Si prega di caricare solo file CSV.", type: "error"});
+      this.openDialog({title: "Formato non valido", description: ["Si prega di caricare solo file CSV."], type: "error"});
       this.fileInput.nativeElement.value = '';
     }
     this.checking = false;
@@ -79,11 +79,11 @@ export class FileUploadComponent {
       if (!fileJustExist) {
         this.selectedFile = files[0];
       } else {
-        this.openDialog({title: "Ops", description: "E' già stato caricato un file con questo nome sul drive.", type: "error"});
+        this.openDialog({title: "Ops", description: ["E' già stato caricato un file con questo nome sul drive."], type: "error"});
         this.fileInput.nativeElement.value = '';
       }
     } else {
-      this.openDialog({title: "Formato non valido", description: "Si prega di caricare solo file CSV.", type: "error"});
+      this.openDialog({title: "Formato non valido", description: ["Si prega di caricare solo file CSV."], type: "error"});
       this.fileInput.nativeElement.value = '';
     }
     this.checking = false;
@@ -102,7 +102,7 @@ export class FileUploadComponent {
     this.selectedFile = null;
   }
 
-  async uploadFile(): Promise<void> {
+  async loadFile(): Promise<void> {
     if (this.selectedFile) {
       this.isUploading = true;
       this.uploaded = 0;
@@ -114,7 +114,7 @@ export class FileUploadComponent {
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
-      this.googleDriveService.upload(formData)
+      this.googleDriveService.create(formData)
       .pipe(
         takeUntil(subject)
       )

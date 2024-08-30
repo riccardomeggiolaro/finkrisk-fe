@@ -1,0 +1,13 @@
+<div class="container">
+  <mat-dialog-content>
+    <p><strong>{{ data.title }}</strong></p>
+    <mat-form-field>
+      <mat-label>Inserisci il codice</mat-label>
+      <input matInput type="number" [(ngModel)]="inputCode" placeholder="Es. 123456">
+    </mat-form-field>
+    <p>{{ error }}</p>
+    <mat-dialog-actions>
+      <button mat-button (click)="onConfirm()" [disabled]="inputCode?.toString()?.length! < 6">Conferma</button>
+    </mat-dialog-actions>
+  </mat-dialog-content>
+</div>
