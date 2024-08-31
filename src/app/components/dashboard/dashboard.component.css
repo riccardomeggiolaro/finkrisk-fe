@@ -1,0 +1,53 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-align: center;
+    width: 100%;
+    background: rgb(82,129,224);
+    background: radial-gradient(circle, rgba(82,129,224,0.691555845971201) 3%, rgba(255,255,255,1) 72%);
+}
+
+.container > * {
+    width: 100%;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.example-icon {
+    padding: 0 14px;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+mat-toolbar {
+    max-width: 100% !important;
+    background-color: transparent;
+    border-bottom: 1px solid #74777f;
+}
+
+mat-toolbar-row {
+    max-width: 1500px !important;
+    margin: auto;
+}
+
+.example-form {
+    width: 100%;
+    max-width: 380px !important;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+:host ::ng-deep .mdc-text-field--outlined {
+    --mdc-outlined-text-field-container-shape: 28px;
+    color: white !important;
+}
+
+h1 {
+    padding-left: 14px;
+}

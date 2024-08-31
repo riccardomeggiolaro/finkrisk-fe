@@ -8,7 +8,7 @@
       <form (ngSubmit)="login()" [formGroup]="loginForm">
         <mat-form-field>
           <mat-label>Username</mat-label>
-          <input matInput type="text" formControlName="username">
+          <input matInput type="email" formControlName="username">
         </mat-form-field>
         <br>
         <mat-form-field>
@@ -38,7 +38,7 @@
       <form (ngSubmit)="confirmLogin()" [formGroup]="confirmForm">
         <mat-form-field>
           <mat-label>Inserisci il codice</mat-label>
-          <input matInput type="string" formControlName="otpCode" #otpCode maxlength="6">
+          <input matInput type="text" formControlName="otpCode" #otpCode maxlength="6">
           <mat-hint align="end">{{otpCode.value.length}} / 6</mat-hint>
         </mat-form-field>
         <mat-card-footer>
@@ -55,7 +55,7 @@
         <br>
         <mat-form-field>
           <mat-label>Inserisci la tua email</mat-label>
-          <input matInput type="string" formControlName="email" #email>
+          <input matInput type="email" formControlName="email" #email>
         </mat-form-field>
         <mat-card-footer>
           <button mat-mini-fab extended type="submit" extended [disabled]="recoveryForm.invalid">

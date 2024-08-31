@@ -1,6 +1,6 @@
 .container {
     background: rgb(82,129,224);
-    background: radial-gradient(circle, rgba(82,129,224,0.691555845971201) 25%, rgba(255,255,255,1) 72%);
+    background: radial-gradient(circle, rgba(82,129,224,0.691555845971201) 3%, rgba(255,255,255,1) 72%);
     display: flex;
     flex-direction: column;
     justify-content: center;
