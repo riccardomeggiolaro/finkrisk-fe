@@ -1,22 +1,27 @@
 .container {
-    display: flex;
-    flex-direction: column;
     height: 100%;
     text-align: center;
-    width: 100%;
     background: rgb(82,129,224);
     background: radial-gradient(circle, rgba(82,129,224,0.691555845971201) 3%, rgba(255,255,255,1) 72%);
 }
 
 .container > * {
     width: 100%;
-    max-width: 1500px;
     margin-left: auto;
     margin-right: auto;
 }
 
+.filters {
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    background-color: transparent;
+    transition: transform 0.7s ease;
+}
+
 .example-icon {
-    padding: 0 14px;
+    padding: 0;
 }
 
 .example-spacer {
@@ -27,6 +32,7 @@ mat-toolbar {
     max-width: 100% !important;
     background-color: transparent;
     border-bottom: 1px solid #74777f;
+    background-color: white;
 }
 
 mat-toolbar-row {
@@ -37,17 +43,103 @@ mat-toolbar-row {
 .example-form {
     width: 100%;
     max-width: 380px !important;
+    display: flex;
+    flex-direction: column;
+    padding-top: 14px;
 }
 
 .example-full-width {
     width: 100%;
 }
 
+.showUnderLine {
+    border-bottom: 1px solid #74777f;
+    background-color: white;
+}
+
 :host ::ng-deep .mdc-text-field--outlined {
     --mdc-outlined-text-field-container-shape: 28px;
     color: white !important;
+    border-radius: 28px;
+    background-color: white;
 }
 
 h1 {
     padding-left: 14px;
+}
+
+table {
+    min-width: 0px !important;
+    max-width: 1000px !important;
+    border-radius: 28px !important;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    margin-right: 14px;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
+
+.actions {
+    text-align: right;
+}
+
+.mat-mdc-header-row th:first-child,
+.mat-mdc-header-row th:last-child {
+    /* Stili applicati al primo mat-header-row */
+    border-radius: 28px 28px 0px 0px !important;
+}
+
+.mat-mdc-footer-row th:first-child,
+.mat-mdc-footer-row th:last-child {
+    /* Stili applicati al primo mat-header-row */
+    border-radius: 0px 0px 28px 28px !important;
+}
+
+.mat-mdc-footer-row {
+    height: 28px !important;
+}
+
+::ng-deep mat-form-field{
+   margin-bottom: -1.25em;
+}
+
+mat-radio-group {
+    padding: 3.3px;
+}
+
+.mat-mdc-radio-button:nth-child(2) {
+  margin-left: 16px;
+}
+
+.mat-mdc-radio-button:nth-child(3) {
+  margin-left: 16px;
+}
+
+a {
+    background-color: white;
+}
+
+::ng-deep .mat-mdc-menu-panel {
+    background-color: white !important;
+    border-radius: 28px !important;
+}
+  
+::ng-deep .mat-mdc-menu-content .mat-mdc-menu-item {
+    background-color: white !important;
+}
+
+.space-from-left {
+    margin-left: 14px;
 }

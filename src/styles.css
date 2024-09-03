@@ -25,3 +25,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .mat-error {
     color: rgba(0,0,0,.6) !important;
   }
+
+.mat-menu-content {
+    background-color: 'red' !important;
+}

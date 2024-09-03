@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { GoogleDriveService } from '../../services/google-drive.service';
+import { DriveService } from '../../services/google-drive.service';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DialogService } from '../../services/dialog.service';
 import { DialogData } from '../dialog-content/dialog-content.component';
@@ -24,7 +24,7 @@ export class FileUploadComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   constructor(
-    private readonly googleDriveService: GoogleDriveService,
+    private readonly googleDriveService: DriveService,
     private readonly dialogService: DialogService) {}
 
   faCloudUploadAlt = faCloudUploadAlt;
@@ -94,8 +94,8 @@ export class FileUploadComponent {
   }
 
   private async checkIfExist(fileName: string): Promise<boolean> {
-    const fileJustExist = await this.googleDriveService.existFile(fileName);
-    return fileJustExist.exist;
+    const fileJustExist = this.googleDriveService.existFile(fileName);
+    return true;
   }
 
   onRemove(): void {

@@ -6,6 +6,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
 
 export const appConfig: ApplicationConfig = {
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideAnimationsAsync(),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } }
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
   ]
 };

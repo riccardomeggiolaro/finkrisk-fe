@@ -53,11 +53,9 @@ export class LoginComponent {
 
   hide = signal(true);
 
-  onLoadProgress = signal(false);
-
-  public toLog: boolean = true;
   public timer = signal(0);
-  public toRecovery: boolean = false;
+  public toAction: 'toLog' | 'toRecovery' | 'toConfirm' = 'toLog';
+  public usernameToConfirm: string | null = null;
 
   private destroyed$ = new Subject<void>();
 
@@ -78,29 +76,33 @@ export class LoginComponent {
     this.hide.set(!this.hide());
   }
 
-  setRecoveryPassword() {
-    this.toRecovery = !this.toRecovery;
+  setAction(action: 'toLog' | 'toRecovery' | 'toConfirm') {
+    if (action === 'toConfirm') {
+      this.usernameToConfirm = this.loginForm.value.username ? this.loginForm.value.username! : null;
+    } else {
+      this.usernameToConfirm = null;
+    }
+    this.toAction = action;
     this.recoveryForm.reset({}, { emitEvent: false });
     this.recoveryForm.markAsUntouched();
     this.loginForm.reset({}, { emitEvent: false });
     this.loginForm.markAsUntouched();
+    this.confirmForm.reset({}, { emitEvent: false });
+    this.confirmForm.markAsPristine();
   }
 
   recoveryPassword() {
-    this.onLoadProgress.set(!this.onLoadProgress());
     this.authSrv.recoveryPassword(this.recoveryForm.value.email!)
     .pipe(
       catchError(err => {
-        this.onLoadProgress.set(!this.onLoadProgress());
         if (err.status === 400 || err.status === 404 || err.status === 401) this.dialogSrv.openDialog({title: 'Email non valida', description: ['Controlla di averla digitata correttamente'], type: 'error'});
         else this.dialogSrv.openDialog({title: 'Errore generico', description: ['Stiamo riscontrando un problema, per favore riprova più tardi'], type: 'error'});
         return err;
       })
     )
     .subscribe(_ => {
-      this.onLoadProgress.set(!this.onLoadProgress());
       this.snackbar.open('Password inviata correttamente', 'OK', { duration: 5000 });
-      this.toRecovery = false;
+      this.toAction = 'toLog';
       this.recoveryForm.reset({}, { emitEvent: false });
       this.recoveryForm.markAsPristine();
     })
@@ -108,66 +110,53 @@ export class LoginComponent {
 
   login() {
     const { username, password } = this.loginForm.value;
-    this.onLoadProgress.set(!this.onLoadProgress());
     this.authSrv.login(username!, password!)
       .pipe(
         catchError(err => {
-          this.onLoadProgress.set(!this.onLoadProgress());
           if (err.status === 401) this.dialogSrv.openDialog({title: 'Credenziali non valide', description: ['Controlla che le credenziali inserite siano corrette'], type: 'error'});
           else this.dialogSrv.openDialog({title: 'Errore generico', description: ['Stiamo riscontrando un problema, per favore riprova più tardi'], type: 'error'});
           return err;
         })
       )
       .subscribe(publicKey => {
-        this.toLog = false;
         this.publicKey = publicKey as string;
-        this.onLoadProgress.set(!this.onLoadProgress());
-        this.loginForm.reset({}, { emitEvent: false });
-        this.loginForm.markAsPristine();
         this.setIntervalTimer();
+        this.setAction('toConfirm');
       });
   }
 
   confirmLogin() { 
-    this.onLoadProgress.set(!this.onLoadProgress());
     this.authSrv.confirm('login', this.publicKey!, this.confirmForm.value.otpCode!)
     .pipe(
       catchError(err => {
-        this.onLoadProgress.set(!this.onLoadProgress());
         if (err.status === 401 || err.status === 400) this.dialogSrv.openDialog({title: 'Codice non valido', description: ['Controlla il codice inviato alla tua email'], type: 'error'});
         else {
           this.dialogSrv.openDialog({title: 'Errore generico', description: ['Stiamo riscontrando un problema, per favore riprova più tardi'], type: 'error'});
           this.loginForm.reset({}, { emitEvent: false });
           this.loginForm.markAsPristine();
-          this.toLog = true;
+          this.toAction = 'toLog';
         }
         return err;
       })
     )
     .subscribe(_ => {
-      this.onLoadProgress.set(!this.onLoadProgress());
-      this.confirmForm.reset({}, { emitEvent: false });
-      this.confirmForm.markAsPristine();
       this.router.navigate(['/dashboard']);
     })
   }
 
   resendConfirm() {
-    this.onLoadProgress.set(!this.onLoadProgress());
     this.authSrv.resendConfirm(this.publicKey!)
     .pipe(
       catchError(err => {
-        this.onLoadProgress.set(!this.onLoadProgress());
         if (err.status === 401 || err.status === 400) this.dialogSrv.openDialog({title: 'Sessione scaduta', description: ['Rieffettua il login'], type: 'error'});
         else this.dialogSrv.openDialog({title: 'Errore generico', description: ['Stiamo riscontrando un problema, per favore riprova più tardi'], type: 'error'});
-        this.toLog = true;
+        this.toAction = 'toLog';
         this.confirmForm.reset({}, { emitEvent: false });
         this.confirmForm.markAsPristine();
         return err;
       })
     )
     .subscribe(publicKey => {
-      this.onLoadProgress.set(!this.onLoadProgress());
       this.setIntervalTimer();
       this.publicKey = publicKey as string;
       this.snackbar.open("Codice reinviato correttamente", "OK", { duration: 5000 });

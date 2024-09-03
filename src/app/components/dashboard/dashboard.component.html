@@ -1,18 +1,103 @@
 <div class="container">
-    <mat-toolbar>
+  <mat-progress-bar mode="indeterminate" [style.display]="onLoadProgress() ? 'block' : 'none'"></mat-progress-bar>
+  <mat-toolbar>
         <mat-toolbar-row>
             <img src="https://img.icons8.com/?size=33&id=Wq62foDY9ZbH&format=png&color=000000">
             <h1><strong>FINRISK</strong></h1>
             <span class="example-spacer"></span>
-          <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">settings</mat-icon>
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">settings</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" class="matMenu">
+              <button mat-menu-item>
+                <mat-icon>account_circle</mat-icon>
+                <span>Dettagli account</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>assistant_photo</mat-icon>
+                <span>Assistenza</span>
+              </button>
+              <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
+              </button>
+            </mat-menu>
         </mat-toolbar-row>
     </mat-toolbar>
-    <br>
-    <form class="example-form">
+    <div class="filters" [ngClass]="{ 'showUnderLine': showUnderLine }">
+      <form class="example-form" [formGroup]="filtersForm">
         <mat-form-field class="example-full-width custom-rounded-input">
-            <mat-label>Cerca</mat-label>
-            <input matInput placeholder="Inserisci la tua ricerca">
-            <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>          
-    </form>
+          <mat-label>Cerca</mat-label>
+          <input matInput placeholder="Inserisci la tua ricerca" formControlName="name">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <mat-radio-group aria-label="Select an option" formControlName="status">
+          <mat-radio-button value="only-elaborated">Elaborati</mat-radio-button>
+          <mat-radio-button value="no-elaborated">Non elaborati</mat-radio-button>
+          <mat-radio-button value="all">Tutti</mat-radio-button>
+        </mat-radio-group>        
+      </form>
+    </div>
+    <table mat-table [dataSource]="files$" class="mat-elevation-z8">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Nome </th>
+          <td mat-cell *matCellDef="let element">
+              <div class="list-item">
+                  <span class="icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#4285f4"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+                  </span>
+                  <span class="text">
+                      {{element.name}}
+                  </span> 
+              </div>
+          </td>
+          <th mat-footer-cell *matFooterCellDef></th>
+      </ng-container>
+    
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Data </th>
+          <td mat-cell *matCellDef="let element"> {{element.createdTime | customDateFormat}} </td>
+          <th mat-footer-cell *matFooterCellDef></th>
+      </ng-container>
+    
+      <!-- Status Column -->
+      <ng-container matColumnDef="elaborated">
+          <th mat-header-cell *matHeaderCellDef> Stato </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="element.elaborated ? 'green' : 'red'">
+              {{element.elaborated ? 'Elaborato' : 'Non elaborato'}}
+          </td>
+          <th mat-footer-cell *matFooterCellDef></th>
+      </ng-container>
+    
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element" class="actions">
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <mat-icon>more_vert</mat-icon> 
+            </button>
+            <mat-menu #menu="matMenu" class="matMenu" xPosition="before">
+              <button mat-menu-item>
+                <mat-icon>download</mat-icon>
+                <span>Scarica</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>delete</mat-icon>
+                <span>Elimina</span>
+              </button>
+            </mat-menu>
+          </td>
+          <th mat-footer-cell *matFooterCellDef></th>
+      </ng-container>
+  
+      <!-- Header Row -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Rows -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <!-- Footer Row -->
+      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+    </table>
+    <br>
 </div>

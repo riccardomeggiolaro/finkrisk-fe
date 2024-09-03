@@ -1,10 +1,9 @@
 <div class="container">
-  <mat-progress-bar mode="indeterminate" [style.display]="onLoadProgress() ? 'block' : 'none'"></mat-progress-bar>
   <mat-card appearance="outlined">
     <mat-card-header>
       <h1>FINRISK</h1>
     </mat-card-header>
-    <mat-card-content *ngIf="toLog && !toRecovery">
+    <mat-card-content *ngIf="toAction === 'toLog'">
       <form (ngSubmit)="login()" [formGroup]="loginForm">
         <mat-form-field>
           <mat-label>Username</mat-label>
@@ -31,8 +30,8 @@
         </mat-card-footer>
       </form>
     </mat-card-content>
-    <mat-card-content *ngIf="!toLog && !toRecovery">
-      Codice inviato a <u><strong>{{ this.loginForm.value.username }}</strong></u>
+    <mat-card-content *ngIf="toAction === 'toConfirm'">
+      Codice inviato a <u><strong>{{ usernameToConfirm }}</strong></u>
       <br>
       <br>
       <form (ngSubmit)="confirmLogin()" [formGroup]="confirmForm">
@@ -48,7 +47,7 @@
         </mat-card-footer>
       </form>
     </mat-card-content>
-    <mat-card-content *ngIf="toRecovery">
+    <mat-card-content *ngIf="toAction === 'toRecovery'">
       <form (ngSubmit)="recoveryPassword()" [formGroup]="recoveryForm">
         Invieremo una nuova password alla email:
         <br>
@@ -65,15 +64,15 @@
       </form>
     </mat-card-content>
     <p class="options">
-      @if (toLog && !toRecovery) {
-      <small>Hai dimenticato la password? <a class="recovery" (click)="setRecoveryPassword()"><u>Recuperala ora</u></a></small>
-      } @else if(!toLog && !toRecovery) {
+      @if (toAction === 'toLog') {
+      <small>Hai dimenticato la password? <a class="recovery" (click)="setAction('toRecovery')"><u>Recuperala ora</u></a></small>
+      } @else if(toAction === 'toConfirm') {
         <small>Non hai ricevuto il codice? 
           <a *ngIf="timer() > 0"><u>Reinvialo tra {{ timer() | timeConverter }}</u></a>
           <a *ngIf="timer() === 0" class="resend" (click)="resendConfirm()"><u>Reinvialo ora</u></a>
         </small>
-      } @else if (toRecovery) {
-        <small class="comeback" (click)="setRecoveryPassword()">
+      } @else if (toAction === 'toRecovery') {
+        <small class="comeback" (click)="setAction('toLog')">
           <mat-icon>arrow_back_ios</mat-icon>
           <span><u>Indietro</u></span>
         </small>
