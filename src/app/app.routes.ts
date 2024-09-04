@@ -6,6 +6,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { FilesResolver } from './components/dashboard/resolvers/files.resolver';
 import { FiltersResolver } from './components/dashboard/resolvers/filters.resolver';
+import { AccountDetailsComponent } from './components/account-details/account-details.component';
 
 export const routes: Routes = [
     {
@@ -22,6 +23,11 @@ export const routes: Routes = [
           files: FilesResolver
         },
         runGuardsAndResolvers: 'paramsOrQueryParamsChange'
+    },
+    {
+      path: 'account-details',
+      canActivate: [authGuard],
+      component: AccountDetailsComponent
     },
     {
         path: '',

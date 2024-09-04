@@ -1,4 +1,30 @@
 <div *ngIf="loading | async" class="progress-bar-container">
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
-<router-outlet></router-outlet>
+<div class="container">
+  <mat-toolbar>
+    <mat-toolbar-row>
+          <img src="https://img.icons8.com/?size=33&id=Wq62foDY9ZbH&format=png&color=000000">
+          <h1><strong>FINRISK</strong></h1>
+          <span class="example-spacer"></span>
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">settings</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="matMenu">
+            <button mat-menu-item [routerLink]="['/dashboard']" >
+              <mat-icon>dashboard</mat-icon>
+              <span>Dashboard</span>
+            </button>
+            <button mat-menu-item [routerLink]="['/account-details']" >
+              <mat-icon>account_circle</mat-icon>
+              <span>Dettagli account</span>
+            </button>
+            <button mat-menu-item (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
+      </mat-toolbar-row>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+</div>

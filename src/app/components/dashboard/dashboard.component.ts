@@ -14,6 +14,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth.service';
+import { MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,7 +34,8 @@ import { AuthService } from '../../services/auth.service';
     MatProgressBarModule,
     MatMenuModule,
     MatButtonModule,
-    NgIf
+    NgIf,
+    MatSortModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -123,9 +125,5 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   updateNavbarHeight() {
     const navbarElement = this.elementRef.nativeElement.querySelector('mat-toolbar');
     this.navbarHeight = navbarElement?.offsetHeight || 0; // Ensure safety in case the element is not found
-  }
-
-  logout() {
-    this.authService.logout();
   }
 }

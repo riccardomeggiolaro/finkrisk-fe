@@ -31,3 +31,41 @@ app-file-upload {
   width: 100%;
   z-index: 9999;
 }
+
+.container {
+  height: 100%;
+  text-align: center;
+  background: rgb(82,129,224);
+  background: radial-gradient(circle, rgba(82,129,224,0.691555845971201) 3%, rgba(255,255,255,1) 72%);
+}
+
+.container > * {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+mat-toolbar {
+  max-width: 100% !important;
+  background-color: transparent;
+  border-bottom: 1px solid #74777f;
+  background-color: white;
+}
+
+mat-toolbar-row {
+  max-width: 1500px !important;
+  margin: auto;
+}
+
+.example-icon {
+  padding: 0;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+::ng-deep .mat-mdc-menu-panel {
+  background-color: white !important;
+  border-radius: 28px !important;
+}
