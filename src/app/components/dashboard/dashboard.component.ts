@@ -8,12 +8,11 @@ import { CustomDateFormatPipe } from '../../pipes/custom-date-format.pipe';
 import {MatRadioModule} from '@angular/material/radio';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Subject, debounceTime, take, takeUntil } from 'rxjs';
 import { File } from '../../services/google-drive.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { AuthService } from '../../services/auth.service';
 import { MatSortModule } from '@angular/material/sort';
 
 @Component({
@@ -62,34 +61,40 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private formBuilder: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private elementRef: ElementRef,
-    private authService: AuthService
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit(): void {
+    // Carica i filtri nel form nel momento dell'inizializzazione della pagina
+    this.activatedRoute.data
+      .pipe(
+        take(1)
+      )
+      .subscribe((value) => {
+        this.filtersForm.patchValue(value["filters"]);
+      })
+
     // Carica i file dal resolver
     this.activatedRoute.data
-    .pipe(
-      takeUntil(this.destroyed$)
-    )
-    .subscribe((value) => {
-      this.onLoadProgress.set(false);
-      this.filtersForm.patchValue(value["filters"]);
-      this.files$.data = value["files"];
-    });
-
-    // // Gestione dei cambiamenti nel form e aggiornamento della query params
-    this.filtersForm.valueChanges
-    .pipe(
-      debounceTime(300),
-      takeUntil(this.destroyed$)
-    )
-    .subscribe(filters => {
-      this.router.navigate([], {
-        queryParams: filters,
-        queryParamsHandling: 'merge'
+      .pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((value) => {
+        this.files$.data = value["files"];
       });
-    });
+
+    // Carica i filtri nuovi nelle query params dell'url
+    this.filtersForm.valueChanges
+      .pipe(
+        debounceTime(300),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe(filters => {
+        this.router.navigate([], {
+          queryParams: filters,
+          queryParamsHandling: 'merge'
+        });
+      });
   }
 
   ngAfterViewInit() {

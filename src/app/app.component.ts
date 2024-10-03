@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from './services/auth.service';
 import { MatButtonModule } from '@angular/material/button';
+import { IfAuthenticatedDirective } from './directives/if-authenticated.directive';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-    RouterModule  // or Ro
+    RouterModule,
+    IfAuthenticatedDirective
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

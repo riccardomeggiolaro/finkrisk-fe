@@ -108,3 +108,7 @@ a {
 tr td:last-child {
     text-align: right;
 }
+
+.text {
+    margin-left: 14px;
+}
