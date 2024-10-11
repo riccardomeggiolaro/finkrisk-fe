@@ -5,10 +5,9 @@
 }
 
 .file-upload-container {
-    border: 2px solid #253d8a;
     border-radius: 20px;
     padding: 30px;
-    background-color: #f0f0f0;
+    background-color: white;
 }
 
 h1 {
@@ -40,12 +39,11 @@ h1 {
 .file-upload-container,
 .selected,
 .uploaded {
-  max-width: 500px;
   margin: 0 auto;
 }
 
 .drop-zone {
-  border: 2px dashed #253d8a;
+  border: 2px dashed rgb(82,129,224);
   border-radius: 20px;
   padding: 20px;
   text-align: center;
@@ -53,8 +51,8 @@ h1 {
 }
 
 .drop-zone.dragover {
-  background-color: white;
-  border-color: #435ab8;
+  background-color: #f0f0f0;
+  border-color: rgb(82,129,224);;
 }
 
 .upload-prompt {
@@ -67,7 +65,7 @@ h1 {
 
 .upload-prompt i {
   font-size: 48px;
-  color: #007bff;
+  color: rgb(82,129,224);
   margin-bottom: 10px;
 }
 
@@ -78,7 +76,7 @@ h1 {
 .upload-prompt button,
 .file-upload-container > .selected > button,
 .file-upload-container > .uploaded > button {
-  background-color: #007bff;
+  background-color: rgb(82,129,224);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -90,7 +88,7 @@ h1 {
 .upload-prompt button:hover,
 .file-upload-container > .selected > button:hover,
 .file-upload-container > .uploaded > button:hover {
-  background-color: #0056b3;
+  background-color: rgb(82,129,224);
 }
 
 .upload-prompt > button,

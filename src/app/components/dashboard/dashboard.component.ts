@@ -14,6 +14,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSortModule } from '@angular/material/sort';
+import { Dialog } from '@angular/cdk/dialog';
+import { FileUploadComponent } from '../file-upload/file-upload.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,7 +36,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatMenuModule,
     MatButtonModule,
     NgIf,
-    MatSortModule
+    MatSortModule,
+    FileUploadComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -61,7 +64,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private formBuilder: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private dialog: Dialog
   ) {}
 
   ngOnInit(): void {
@@ -130,5 +134,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   updateNavbarHeight() {
     const navbarElement = this.elementRef.nativeElement.querySelector('mat-toolbar');
     this.navbarHeight = navbarElement?.offsetHeight || 0; // Ensure safety in case the element is not found
+  }
+
+  uploadFile() {
+    this.dialog.open(FileUploadComponent, {
+      width: '550px',
+      disableClose: false
+    });
   }
 }

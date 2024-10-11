@@ -7,6 +7,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DialogService } from '../../services/dialog.service';
 import { DialogData } from '../dialog-content/dialog-content.component';
 import { Subject, takeUntil } from 'rxjs';
+import { FormattedEvent } from '../../services/google-drive.service';
 
 @Component({
   standalone: true,
@@ -36,6 +37,7 @@ export class FileUploadComponent {
   uploading: boolean = false;
   uploaded: number | null = null;
   checking: boolean = false;
+  errorUploading: string | null = null;
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -94,8 +96,8 @@ export class FileUploadComponent {
   }
 
   private async checkIfExist(fileName: string): Promise<boolean> {
-    const fileJustExist = this.googleDriveService.existFile(fileName);
-    return true;
+    const fileJustExist = await this.googleDriveService.existFile(fileName);
+    return fileJustExist.exist;
   }
 
   onRemove(): void {
@@ -119,18 +121,20 @@ export class FileUploadComponent {
         takeUntil(subject)
       )
       .subscribe({
-        next: (data: {progress: number}) => {
-          this.uploaded = data.progress < 100 ? data.progress : this.uploaded;
+        next: (event: FormattedEvent) => {
+          if (event.type === 'progress') {
+            if (event.progress! > 100) this.uploaded = event.progress!;
+          } else if (event.type === 'complete') {
+            console.log(event.id);
+            this.uploaded = 100;
+          }
         },
-        error: (err: any) => {
-          console.error('Errore ricevuto:', err);
-          subject.next();
-          subject.complete();
+        error: (error) => {
+          this.errorUploading = error;
         },
         complete: () => {
-          this.uploaded = 100;
-          subject.next();
-          subject.complete();
+          console.log('Stream ended');
+          // Esegui operazioni di pulizia se necessario
         }
       });
     }
@@ -140,6 +144,7 @@ export class FileUploadComponent {
     this.uploaded = null;
     this.uploading = false;
     this.selectedFile = null;
+    this.errorUploading = null;
   }
 
   getFileName(): string {

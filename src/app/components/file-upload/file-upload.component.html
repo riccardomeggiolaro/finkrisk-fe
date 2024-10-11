@@ -1,5 +1,5 @@
 <div class="file-upload-container">
-  <h1>Finrisk File Uploader</h1>
+  <h1>Upload</h1>
 
   <!-- 1° PASSAGGIO: Caricamento del file -->
   <div
@@ -35,6 +35,7 @@
   <div *ngIf="uploading" class="uploaded">
     <mat-progress-bar mode="determinate" [value]="uploaded"></mat-progress-bar>
     <p> {{ uploaded !== 100 ? uploaded + "%" : "Il file é stato caricato!" }}</p>
-    <button *ngIf="uploaded === 100" (click)="reinit()">OK</button>
+    <p *ngIf="errorUploading"> {{ errorUploading }} </p>
+    <button *ngIf="uploaded === 100 || errorUploading" (click)="reinit()">OK</button>
   </div>
 </div>
