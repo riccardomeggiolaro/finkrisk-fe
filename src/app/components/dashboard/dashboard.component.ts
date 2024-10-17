@@ -8,14 +8,15 @@ import { CustomDateFormatPipe } from '../../pipes/custom-date-format.pipe';
 import {MatRadioModule} from '@angular/material/radio';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, debounceTime, take, takeUntil } from 'rxjs';
-import { File } from '../../services/google-drive.service';
+import { Subject, catchError, debounceTime, take, takeUntil } from 'rxjs';
+import { DriveService, File } from '../../services/google-drive.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSortModule } from '@angular/material/sort';
 import { Dialog } from '@angular/cdk/dialog';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
+import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -65,7 +66,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private elementRef: ElementRef,
-    private dialog: Dialog
+    private dialog: Dialog,
+    private driveService: DriveService,
+    private snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -141,5 +144,18 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       width: '550px',
       disableClose: false
     });
+  }
+
+  deleteFile(id: string) {
+    this.driveService.delete(id)
+    .pipe(
+      catchError(err => {
+        this.snackbarService.open(err, "OK");
+        return err;
+      })
+    )
+    .subscribe(() => {
+      this.snackbarService.open("File eliminato adesso", "OK");
+    })
   }
 }

@@ -64,7 +64,7 @@
             <mat-icon>download</mat-icon>
             <span>Scarica</span>
           </button>
-          <button mat-menu-item *ngIf="!element.elaborated">
+          <button mat-menu-item *ngIf="!element.elaborated" (click)="deleteFile(element.id)">
             <mat-icon>delete</mat-icon>
             <span>Elimina</span>
           </button>

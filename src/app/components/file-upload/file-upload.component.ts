@@ -123,7 +123,7 @@ export class FileUploadComponent {
       .subscribe({
         next: (event: FormattedEvent) => {
           if (event.type === 'progress') {
-            if (event.progress! > 100) this.uploaded = event.progress!;
+            if (event.progress! < 100) this.uploaded = event.progress!;
           } else if (event.type === 'complete') {
             console.log(event.id);
             this.uploaded = 100;
