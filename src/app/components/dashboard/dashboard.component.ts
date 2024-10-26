@@ -9,7 +9,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, catchError, debounceTime, take, takeUntil } from 'rxjs';
-import { DriveService, File } from '../../services/google-drive.service';
+import { DriveService, File } from '../../services/drive-drive.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -144,6 +144,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       width: '550px',
       disableClose: false
     });
+  }
+
+  downloadFile(id: string) {
+    this.driveService.downloadFile(id);
   }
 
   deleteFile(id: string) {

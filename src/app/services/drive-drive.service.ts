@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { isNil, omitBy } from 'lodash';
 import { Observable, catchError, of, shareReplay } from 'rxjs';
 import { JwtService } from './jwt.service';
+import { saveAs } from 'file-saver';
 
 export interface PeriodicElement {
   name: string;
@@ -86,6 +87,27 @@ export class DriveService {
     });
   }
   
+  downloadFile(fileId: string): void {
+    this.http.get(`${this.apiUrl}/download/${fileId}`, {
+      responseType: 'blob', // Ottiene la risposta come Blob (binario)
+      observe: 'response' // Ottiene anche le intestazioni di risposta
+    }).subscribe(response => {
+      const fileName = this.getFileNameFromDisposition(response.headers.get('Content-Disposition'));
+      const blob = response.body as Blob;
+
+      // Usa `file-saver` per forzare il download con il nome file corretto
+      saveAs(blob, fileName);
+    });
+  }
+
+  // Estrae il nome del file dall'intestazione Content-Disposition
+  private getFileNameFromDisposition(contentDisposition: string | null): string {
+    if (!contentDisposition) return 'downloaded_file';
+
+    const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?(.+?)"?($|;)/);
+    return match ? decodeURIComponent(match[1] || match[2]) : 'downloaded_file';
+  }
+
   private formatStreamEvent(chunk: string): FormattedEvent[] {
     const events = chunk.split('\n\n').filter(event => event.trim() !== '');
     

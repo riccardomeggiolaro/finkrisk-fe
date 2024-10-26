@@ -2,12 +2,12 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { DriveService } from '../../services/google-drive.service';
+import { DriveService } from '../../services/drive-drive.service';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DialogService } from '../../services/dialog.service';
 import { DialogData } from '../dialog-content/dialog-content.component';
 import { Subject, takeUntil } from 'rxjs';
-import { FormattedEvent } from '../../services/google-drive.service';
+import { FormattedEvent } from '../../services/drive-drive.service';
 
 @Component({
   standalone: true,
