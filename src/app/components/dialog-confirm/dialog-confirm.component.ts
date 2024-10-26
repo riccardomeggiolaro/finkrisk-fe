@@ -36,7 +36,6 @@ export class DialogConfirmComponent {
       this.authSrv.confirm(this.data.action, this.data.publicKey, this.inputCode!)
       .pipe(
         catchError(err => {
-          console.log("eferrgr")
           this.error = 'Codice non valido';
           console.log(this.error)
           return of(err);

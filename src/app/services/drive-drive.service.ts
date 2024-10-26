@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { isNil, omitBy } from 'lodash';
-import { Observable, catchError, of, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, debounceTime, of, shareReplay, takeUntil } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { saveAs } from 'file-saver';
 import { SnackbarService } from './snackbar.service';
@@ -42,16 +42,44 @@ export interface FormattedEvent {
 })
 export class DriveService {
   private apiUrl = 'http://localhost:3000/api/drive'; // Replace with your API URL
+  private _files$ = new BehaviorSubject<File[]>([]);
+  public readonly files$ = this._files$.asObservable();
+  private _filters$ = new BehaviorSubject<FileFilters>({});
+  public readonly filters$ = this._filters$.asObservable();
 
   constructor(
     private http: HttpClient,
     private jwtService: JwtService,
     private snackbarService: SnackbarService
-  ) { }
+  ) {
+    this._filters$
+      .pipe(
+        debounceTime(300),
+      )
+      .subscribe(value => {
+        const queryParams = omitBy(value, isNil);
+        this.http.get<File[]>(`${this.apiUrl}/list`, { params: queryParams })
+          .pipe(
+            shareReplay(1), // Condivide il risultato tra più sottoscrizioni
+            catchError(err => {
+              console.error('Error fetching files:', err);
+              this._files$.next([]);
+              return of([]);
+            })
+          )
+          .subscribe(value => {
+            this._files$.next(value);
+          });
+      })
+  }
 
-  upload(formData: FormData): Observable<FormattedEvent> {
+  updateFilters(filters: FileFilters): void {
+    this._filters$.next(filters);
+  }
+
+  upload(formData: FormData, signal?: AbortSignal): Observable<FormattedEvent> {
     const authToken = this.jwtService.getToken();
-
+  
     return new Observable<FormattedEvent>(observer => {
       const fetchData = async () => {
         try {
@@ -60,16 +88,17 @@ export class DriveService {
             headers: {
               'Authorization': `Bearer ${authToken}`
             },
-            body: formData
+            body: formData,
+            signal // Passiamo il signal qui
           });
-
+  
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-
+  
           const reader = response.body!.getReader();
           const decoder = new TextDecoder();
-
+  
           while (true) {
             const { value, done } = await reader.read();
             if (done) break;
@@ -78,19 +107,24 @@ export class DriveService {
             const formattedEvents = this.formatStreamEvent(chunk);
             formattedEvents.forEach(event => observer.next(event));
           }
-
+  
           observer.complete();
         } catch (error) {
-          observer.error(error);
+          if ((error as Error).name === 'AbortError') {
+            this.snackbarService.open("L'upload del file è stato cancellato", "OK");
+          } else {
+            observer.error(error);
+          }
         }
       };
-
-      fetchData();
+  
+      fetchData()
+        .then(_ => this.updateFilters(this._filters$.value));
     });
-  }
+  }  
   
   download(id: string): void {
-    this.snackbarService.open("Scaricando il file...", "OK");
+    this.snackbarService.open("Scaricando il file...", "OK", 5000);
     this.http.get(`${this.apiUrl}/download/${id}`, {
       responseType: 'blob', // Ottiene la risposta come Blob (binario)
       observe: 'response' // Ottiene anche le intestazioni di risposta
@@ -110,18 +144,6 @@ export class DriveService {
     });
   }
 
-  list(filters: FileFilters): Observable<File[]> {
-    const queryParams = omitBy(filters, isNil);
-    return this.http.get<File[]>(`${this.apiUrl}/list`, { params: queryParams })
-      .pipe(
-        shareReplay(1), // Condivide il risultato tra più sottoscrizioni
-        catchError(err => {
-          console.error('Error fetching files:', err);
-          return of([]);
-        })
-      );
-  }
-
   async exist(name: string): Promise<{ exist: boolean, data: File }> {
     const response = await this.http.get<{ exist: boolean; data: File; }>(`${this.apiUrl}/exist/name/${name}`).toPromise();
     return response!;
@@ -137,6 +159,7 @@ export class DriveService {
     )
     .subscribe(() => {
       this.snackbarService.open("File eliminato adesso", "OK");
+      this._filters$.next(this._filters$.value);
     })
   }
 

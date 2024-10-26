@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
@@ -6,7 +6,7 @@ import { DriveService } from '../../services/drive-drive.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DialogService } from '../../services/dialog.service';
 import { DialogData } from '../dialog-content/dialog-content.component';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { FormattedEvent } from '../../services/drive-drive.service';
 
 @Component({
@@ -20,7 +20,10 @@ import { FormattedEvent } from '../../services/drive-drive.service';
     MatProgressBarModule
   ]
 })
-export class FileUploadComponent {
+export class FileUploadComponent implements OnDestroy {
+
+  private controller = new AbortController();
+  private subscription: Subscription | null = null;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -38,6 +41,11 @@ export class FileUploadComponent {
   uploaded: number | null = null;
   checking: boolean = false;
   errorUploading: string | null = null;
+
+  ngOnDestroy(): void {
+    this.controller.abort();
+    this.subscription?.unsubscribe();
+  }
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -114,9 +122,10 @@ export class FileUploadComponent {
       const subject = new Subject<void>();
 
       const formData = new FormData();
+
       formData.append('file', this.selectedFile);
 
-      this.googleDriveService.upload(formData)
+      this.subscription = this.googleDriveService.upload(formData, this.controller.signal)
       .pipe(
         takeUntil(subject)
       )

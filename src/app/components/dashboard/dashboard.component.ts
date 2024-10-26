@@ -2,14 +2,14 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostList
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { CustomDateFormatPipe } from '../../pipes/custom-date-format.pipe';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, debounceTime, take, takeUntil } from 'rxjs';
-import { DriveService, File } from '../../services/drive-drive.service';
+import { defer, map, merge, Observable, Subject, take, takeUntil, tap } from 'rxjs';
+import { DriveService, File, FileFilters } from '../../services/drive-drive.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,7 +37,7 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
     MatButtonModule,
     NgIf,
     MatSortModule,
-    FileUploadComponent
+    FileUploadComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -53,12 +53,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     name: '',
     status: 'all' as 'all' | 'only-elaborated' | 'no-elaborated'
   });
+  
+  private destroyed$ = new Subject<void>();
 
-  files$ = new MatTableDataSource<File[]>([]);
+  files$: Observable<File[]> = this.driveService.files$
+    .pipe(
+      takeUntil(this.destroyed$)
+    );
 
   onLoadProgress = signal(false);
-
-  private destroyed$ = new Subject<void>();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,28 +73,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Carica i filtri nel form nel momento dell'inizializzazione della pagina
-    this.activatedRoute.data
-      .pipe(
-        take(1)
-      )
-      .subscribe((value) => {
-        this.filtersForm.patchValue(value["filters"]);
-      })
+    // Creazione di un observable differito per i parametri iniziali
+    const initialParams$ = defer(() => 
+      this.activatedRoute.queryParams
+        .pipe(
+          take(1),
+          tap(value => {
+            this.filtersForm.patchValue(value, { emitEvent: false });
+          })
+        )
+    );
 
-    // Carica i file dal resolver
-    this.activatedRoute.data
+    // Combiniamo i due stream
+    merge(initialParams$, this.filtersForm.valueChanges)
       .pipe(
-        takeUntil(this.destroyed$)
-      )
-      .subscribe((value) => {
-        this.files$.data = value["files"];
-      });
-
-    // Carica i filtri nuovi nelle query params dell'url
-    this.filtersForm.valueChanges
-      .pipe(
-        debounceTime(300),
         takeUntil(this.destroyed$)
       )
       .subscribe(filters => {
@@ -99,6 +94,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           queryParams: filters,
           queryParamsHandling: 'merge'
         });
+        this.driveService.updateFilters(filters as FileFilters);
       });
   }
 

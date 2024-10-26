@@ -1,23 +1,23 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
-import { Observable } from "rxjs";
-import { DriveService, File } from '../../../services/drive-drive.service';
-import { FileFilters } from '../../../services/drive-drive.service';
+import { DriveService, FileFilters } from "../../services/drive-drive.service";
 
-@Injectable({ providedIn: 'root' })
-export class FilesResolver implements Resolve<File[]> {
+@Injectable({ 
+  providedIn: 'root'
+})
+export class FiltersResolver implements Resolve<void> {
   constructor(private driveService: DriveService) {}
 
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<File[]> {
+  ): void {
     const filters: FileFilters = {
       name: route.queryParams['name'] || null,
       status: route.queryParams['status'] || 'all'
     };
 
     // Chiamata al servizio con i filtri dalla query params
-    return this.driveService.list(filters)
+    this.driveService.updateFilters(filters);
   }
 }
