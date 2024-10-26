@@ -67,11 +67,24 @@ export class FileUploadComponent implements OnDestroy {
     const files = event.dataTransfer?.files;
     if (files && files.length > 0 && this.isCSVFile(files[0])) {
       this.checking = true;
-      const fileJustExist = await this.checkIfExist(files[0].name);
-      if (!fileJustExist) {
-        this.selectedFile = files[0];
-      } else {
-        this.openDialog({title: "Ops", description: ["E' già stato caricato un file con questo nome sul drive."], type: "error"});
+      try {
+        const fileJustExist = await this.checkIfExist(files[0].name);
+        if (!fileJustExist) {
+          this.selectedFile = files[0];
+        } else {
+          this.openDialog({title: "Ops", description: ["E' già stato caricato un file con questo nome sul drive."], type: "error"});
+          this.fileInput.nativeElement.value = '';
+        }
+      } catch (err) {
+        if ('status' in (err as Error)) {
+          const error = err as { status: number }; // Type assertion per accedere a `status`
+          
+          if (error.status === 400) {
+              this.openDialog({title: "Ops", description: ["Il nome del file deve contenere il codice abi associato nel seguente formato: '_abicode_'."], type: "error"});
+          }
+        } else {
+          this.openDialog({title: "Ops", description: ["Stiamo riscontrando un problema interno, per favore riprova più tardi."], type: "error"});
+        }
         this.fileInput.nativeElement.value = '';
       }
     } else {
@@ -85,11 +98,24 @@ export class FileUploadComponent implements OnDestroy {
     const files = event.target.files;
     if (files && files.length > 0 && this.isCSVFile(files[0])) {
       this.checking = true;
-      const fileJustExist = await this.checkIfExist(files[0].name);
-      if (!fileJustExist) {
-        this.selectedFile = files[0];
-      } else {
-        this.openDialog({title: "Ops", description: ["E' già stato caricato un file con questo nome sul drive."], type: "error"});
+      try {
+        const fileJustExist = await this.checkIfExist(files[0].name);
+        if (!fileJustExist) {
+          this.selectedFile = files[0];
+        } else {
+          this.openDialog({title: "Ops", description: ["E' già stato caricato un file con questo nome sul drive."], type: "error"});
+          this.fileInput.nativeElement.value = '';
+        }
+      } catch (err) {
+        if ('status' in (err as Error)) {
+          const error = err as { status: number }; // Type assertion per accedere a `status`
+          
+          if (error.status === 400) {
+              this.openDialog({title: "Ops", description: ["Il nome del file deve contenere il codice abi associato nel seguente formato: '_abicode_'."], type: "error"});
+          }
+        } else {
+          this.openDialog({title: "Ops", description: ["Stiamo riscontrando un problema interno, per favore riprova più tardi."], type: "error"});
+        }
         this.fileInput.nativeElement.value = '';
       }
     } else {
