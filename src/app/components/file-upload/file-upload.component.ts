@@ -3,7 +3,7 @@ import { NgIf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { DriveService } from '../../services/drive-drive.service';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DialogService } from '../../services/dialog.service';
 import { DialogData } from '../dialog-content/dialog-content.component';
 import { Subject, takeUntil } from 'rxjs';
@@ -96,7 +96,7 @@ export class FileUploadComponent {
   }
 
   private async checkIfExist(fileName: string): Promise<boolean> {
-    const fileJustExist = await this.googleDriveService.existFile(fileName);
+    const fileJustExist = await this.googleDriveService.exist(fileName);
     return fileJustExist.exist;
   }
 
@@ -116,7 +116,7 @@ export class FileUploadComponent {
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
-      this.googleDriveService.create(formData)
+      this.googleDriveService.upload(formData)
       .pipe(
         takeUntil(subject)
       )

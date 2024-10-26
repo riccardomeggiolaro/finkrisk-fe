@@ -4,8 +4,9 @@ import { isNil, omitBy } from 'lodash';
 import { Observable, catchError, of, shareReplay } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { saveAs } from 'file-saver';
+import { SnackbarService } from './snackbar.service';
 
-export interface PeriodicElement {
+export interface FileData {
   name: string;
   date: Date;
   elaborated: boolean;
@@ -44,10 +45,11 @@ export class DriveService {
 
   constructor(
     private http: HttpClient,
-    private jwtService: JwtService  
+    private jwtService: JwtService,
+    private snackbarService: SnackbarService
   ) { }
 
-  create(formData: FormData): Observable<FormattedEvent> {
+  upload(formData: FormData): Observable<FormattedEvent> {
     const authToken = this.jwtService.getToken();
 
     return new Observable<FormattedEvent>(observer => {
@@ -87,17 +89,55 @@ export class DriveService {
     });
   }
   
-  downloadFile(fileId: string): void {
-    this.http.get(`${this.apiUrl}/download/${fileId}`, {
+  download(id: string): void {
+    this.snackbarService.open("Scaricando il file...", "OK");
+    this.http.get(`${this.apiUrl}/download/${id}`, {
       responseType: 'blob', // Ottiene la risposta come Blob (binario)
       observe: 'response' // Ottiene anche le intestazioni di risposta
-    }).subscribe(response => {
+    })
+    .pipe(
+      catchError(err => {
+        this.snackbarService.open(err, "OK");
+        return of();
+      })
+    )
+    .subscribe(response => {
       const fileName = this.getFileNameFromDisposition(response.headers.get('Content-Disposition'));
       const blob = response.body as Blob;
 
       // Usa `file-saver` per forzare il download con il nome file corretto
       saveAs(blob, fileName);
     });
+  }
+
+  list(filters: FileFilters): Observable<File[]> {
+    const queryParams = omitBy(filters, isNil);
+    return this.http.get<File[]>(`${this.apiUrl}/list`, { params: queryParams })
+      .pipe(
+        shareReplay(1), // Condivide il risultato tra più sottoscrizioni
+        catchError(err => {
+          console.error('Error fetching files:', err);
+          return of([]);
+        })
+      );
+  }
+
+  async exist(name: string): Promise<{ exist: boolean, data: File }> {
+    const response = await this.http.get<{ exist: boolean; data: File; }>(`${this.apiUrl}/exist/name/${name}`).toPromise();
+    return response!;
+  }
+
+  delete(id: string): void {
+    this.http.delete<void>(`${this.apiUrl}/id/${id}`)
+    .pipe(
+      catchError(err => {
+        this.snackbarService.open(err, "OK");
+        return err;
+      })
+    )
+    .subscribe(() => {
+      this.snackbarService.open("File eliminato adesso", "OK");
+    })
   }
 
   // Estrae il nome del file dall'intestazione Content-Disposition
@@ -151,26 +191,5 @@ export class DriveService {
   
       return { type: 'unknown' };
     });
-  }
-
-  list(filters: FileFilters): Observable<File[]> {
-    const queryParams = omitBy(filters, isNil);
-    return this.http.get<File[]>(`${this.apiUrl}/list`, { params: queryParams })
-      .pipe(
-        shareReplay(1), // Condivide il risultato tra più sottoscrizioni
-        catchError(err => {
-          console.error('Error fetching files:', err);
-          return of([]); 
-        })
-      );
-  }
-
-  async existFile(fileName: string): Promise<{ exist: boolean, data: File }> {
-    const response = await this.http.get<{ exist: boolean; data: File; }>(`${this.apiUrl}/exist/name/${fileName}`).toPromise();
-    return response!;
-  }
-
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/id/${id}`);
   }
 }

@@ -12,7 +12,7 @@ import { NgIf } from '@angular/common';
 import { DialogService } from '../../services/dialog.service';
 import { Router } from '@angular/router';
 import { TimeConverterPipe } from '../../pipes/time-converter.pipe';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',

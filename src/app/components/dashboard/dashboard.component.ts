@@ -1,14 +1,14 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, OnDestroy, OnInit, signal } from '@angular/core';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { CustomDateFormatPipe } from '../../pipes/custom-date-format.pipe';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, catchError, debounceTime, take, takeUntil } from 'rxjs';
+import { Subject, debounceTime, take, takeUntil } from 'rxjs';
 import { DriveService, File } from '../../services/drive-drive.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -16,7 +16,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSortModule } from '@angular/material/sort';
 import { Dialog } from '@angular/cdk/dialog';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
-import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -67,8 +66,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private elementRef: ElementRef,
     private dialog: Dialog,
-    private driveService: DriveService,
-    private snackbarService: SnackbarService
+    private driveService: DriveService
   ) {}
 
   ngOnInit(): void {
@@ -147,19 +145,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   downloadFile(id: string) {
-    this.driveService.downloadFile(id);
+    this.driveService.download(id);
   }
 
   deleteFile(id: string) {
-    this.driveService.delete(id)
-    .pipe(
-      catchError(err => {
-        this.snackbarService.open(err, "OK");
-        return err;
-      })
-    )
-    .subscribe(() => {
-      this.snackbarService.open("File eliminato adesso", "OK");
-    })
+    this.driveService.delete(id);
   }
 }

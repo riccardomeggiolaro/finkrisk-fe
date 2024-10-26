@@ -5,27 +5,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Rimuove il colore rosso dal bordo e dal testo di etichetta */
 .mat-form-field-appearance-outline.mat-form-field-invalid .mat-form-field-outline-thick {
-    color: rgba(0,0,0,.12) !important;
-  }
+  color: rgba(0,0,0,.12) !important;
+}
+
+.mat-form-field-appearance-outline.mat-form-field-invalid .mat-form-field-label {
+  color: rgba(0,0,0,.6) !important;
+}
+
+/* Rimuove l'icona di errore */
+.mat-form-field-appearance-outline .mat-form-field-subscript-wrapper {
+  padding: 0 !important;
+}
+
+.mat-error {
+  display: none !important;
+}
   
-  .mat-form-field-appearance-outline.mat-form-field-invalid .mat-form-field-label {
-    color: rgba(0,0,0,.6) !important;
-  }
-  
-  /* Rimuove l'icona di errore */
-  .mat-form-field-appearance-outline .mat-form-field-subscript-wrapper {
-    padding: 0 !important;
-  }
-  
-  .mat-error {
-    display: none !important;
-  }
-  
-  /* Opzionale: se vuoi mantenere il messaggio di errore ma senza il colore rosso */
-  .mat-error {
-    color: rgba(0,0,0,.6) !important;
-  }
+/* Opzionale: se vuoi mantenere il messaggio di errore ma senza il colore rosso */
+.mat-error {
+  color: rgba(0,0,0,.6) !important;
+}
 
 .mat-menu-content {
-    background-color: 'red' !important;
+  background-color: 'red' !important;
 }
