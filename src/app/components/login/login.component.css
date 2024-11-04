@@ -1,6 +1,6 @@
 .container {
-    background: rgb(82,129,224);
-    background: radial-gradient(circle, rgba(82,129,224,0.691555845971201) 3%, rgba(255,255,255,1) 72%);
+    background: var(--fifth-color);
+    background: radial-gradient(circle, var(--fifth-color) 3%, var(--secondary-color) 72%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -9,7 +9,7 @@
 }
 
 mat-card {
-    background-color: white;
+    background-color: var(--secondary-color);
     width: 100%;
     max-width: 350px;
 }

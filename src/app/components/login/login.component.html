@@ -5,10 +5,10 @@
     </mat-card-header>
     <mat-card-content *ngIf="toAction === 'toLog'">
       <form (ngSubmit)="login()" [formGroup]="loginForm">
-        <mat-form-field>
+        <mat-form-field class="custom-form-field">
           <mat-label>Username</mat-label>
           <input matInput type="email" formControlName="username">
-        </mat-form-field>
+        </mat-form-field>        
         <br>
         <mat-form-field>
           <mat-label>Password</mat-label>

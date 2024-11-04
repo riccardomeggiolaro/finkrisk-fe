@@ -1,15 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
 
+:root {
+  --primary-color: green;
+  --secondary-color: white;
+  --third-color: rgba(0,0,0,.12);
+  --fourth-color: #74777f;
+  --fifth-color: rgb(158, 223, 168);
+  --sixth-color: darkred;
+  --seventh-color: red;
+  --mdc-outlined-text-field-focus-outline-color: var(--primary-color) !important;
+  --mdc-outlined-text-field-focus-label-text-color: var(--primary-color) !important;
+  --mdc-radio-selected-icon-color: var(--primary-color) !important;
+  --mdc-radio-selected-hover-icon-color: var(--primary-color);
+  --mdc-radio-selected-focus-icon-color: var(--primary-color);
+  --mdc-radio-selected-pressed-icon-color: var(--primary-color);
+  --mdc-linear-progress-active-indicator-color: var(--primary-color) !important;
+}
+
+:host ::ng-deep {
+  .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+    color: var(--primary-color);
+  }
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Rimuove il colore rosso dal bordo e dal testo di etichetta */
 .mat-form-field-appearance-outline.mat-form-field-invalid .mat-form-field-outline-thick {
-  color: rgba(0,0,0,.12) !important;
+  color: var(--third-color) !important;
 }
 
 .mat-form-field-appearance-outline.mat-form-field-invalid .mat-form-field-label {
-  color: rgba(0,0,0,.6) !important;
+  color: var(--secondary-color) !important;
 }
 
 /* Rimuove l'icona di errore */
@@ -23,9 +46,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   
 /* Opzionale: se vuoi mantenere il messaggio di errore ma senza il colore rosso */
 .mat-error {
-  color: rgba(0,0,0,.6) !important;
+  color: var(--secondary-color) !important;
 }
 
 .mat-menu-content {
   background-color: 'red' !important;
+}
+
+.mdc-notched-outline .mdc-notched-outline--upgraded {
+  border: 2px solid var(--primary-color);
+}
+
+::ng-deep .mat-form-field-outline {
+  color: var(--primary-color) !important;
+}
+
+button.mdc-fab.mat-mdc-fab-base.mdc-fab--mini.mat-mdc-mini-fab.mat-accent.mat-mdc-button-base:enabled {
+  background-color: var(--primary-color) !important;
+  color: var(--secondary-color) !important;
 }

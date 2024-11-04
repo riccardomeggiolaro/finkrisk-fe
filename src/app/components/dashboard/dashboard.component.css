@@ -20,15 +20,15 @@
 }
 
 .showUnderLine {
-    border-bottom: 1px solid #74777f;
-    background-color: white;
+    border-bottom: 1px solid var(--fourth-color);
+    background-color: var(--secondary-color);
 }
 
 :host ::ng-deep .mdc-text-field--outlined {
     --mdc-outlined-text-field-container-shape: 28px;
-    color: white !important;
+    color: var(--secondary-color) !important;
     border-radius: 28px;
-    background-color: white;
+    background-color: var(--secondary-color);
 }
 
 h1 {
@@ -49,11 +49,11 @@ table {
 }
 
 .green {
-    color: green;
+    color: var(--primary-color);
 }
 
 .red {
-    color: red;
+    color: var(--seventh-color);
 }
 
 .mat-mdc-header-row th:first-child,
@@ -89,11 +89,11 @@ mat-radio-group {
 }
 
 a {
-    background-color: white;
+    background-color: var(--secondary-color);
 }
 
 ::ng-deep .mat-mdc-menu-panel {
-    background-color: white !important;
+    background-color: var(--secondary-color) !important;
     border-radius: 28px !important;
 }
 
@@ -115,5 +115,9 @@ tr td:last-child {
 }
 
 .add {
-    color: rgb(82,129,224);
+    color: var(--primary-color);
+}
+
+.add:hover {
+    color: var(--primary-color);
 }

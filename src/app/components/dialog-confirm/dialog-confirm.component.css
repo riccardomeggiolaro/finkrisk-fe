@@ -3,6 +3,6 @@
 }
 
 .error {
-  color: red;
+  color: var(--seventh-color);
   font-weight: bold;
 }

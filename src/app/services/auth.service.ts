@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   login(username: string, password: string) {
-    return this.http.post<ConfirmResponse>(`${this.url}/login`, {username, password})
+    return this.http.post<ConfirmResponse>(`${this.url}/login`, {username, password, folderParent: 'finrisk'})
       .pipe(
         map(res => res.publicKey)
       );
@@ -62,14 +62,14 @@ export class AuthService {
   }
 
   resendConfirm(publicKey: string) {
-    return this.http.get<ConfirmResponse>(`${this.url}/resend-confirm/${publicKey}`)
+    return this.http.post<ConfirmResponse>(`${this.url}/resend-confirm-login/${publicKey}`, { folderParent: 'finrisk' })
       .pipe(
         map(res => res.publicKey)
       )
   }
 
   recoveryPassword(email: string) {
-    return this.http.get<{ message: string }>(`${this.url}/send-recovery-password/${email}`);
+    return this.http.post<{ message: string }>(`${this.url}/send-recovery-password/${email}`, { folderParent: 'finrisk' });
   }
 
   logout() {
