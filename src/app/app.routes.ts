@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AccountDetailsComponent } from './components/account-details/account-details.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 export const routes: Routes = [
     {
@@ -30,9 +31,13 @@ export const routes: Routes = [
             },
             {
                 path: '',
-                redirectTo: 'dashboard',
+                redirectTo: 'login',
                 pathMatch: 'full'
             }
         ]
+    },
+    {
+        path: '',
+        component: NotFoundComponent
     }
 ];

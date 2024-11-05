@@ -4,18 +4,18 @@
 <div class="container">
   <mat-toolbar *ifAuthenticated>
     <mat-toolbar-row>
-          <img src="https://img.icons8.com/?size=33&id=JF6kPfhVzeVz&format=png&color=008000">
-          <h1><strong>FINRISK</strong></h1>
+          <img [src]="favicon">
+          <h1><strong>{{ title }}</strong></h1>
           <span class="example-spacer"></span>
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">settings</mat-icon>
           </button>
           <mat-menu #menu="matMenu" class="matMenu">
-            <button mat-menu-item [routerLink]="['/dashboard']" >
+            <button mat-menu-item [routerLink]="['/:app/dashboard']" >
               <mat-icon>dashboard</mat-icon>
               <span>Dashboard</span>
             </button>
-            <button mat-menu-item [routerLink]="['/account-details']" >
+            <button mat-menu-item [routerLink]="['/:app/account-details']" >
               <mat-icon>account_circle</mat-icon>
               <span>Dettagli account</span>
             </button>

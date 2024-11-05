@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -31,15 +31,27 @@ import { IfAuthenticatedDirective } from './directives/if-authenticated.directiv
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'folder-explorer';
-
+export class AppComponent implements OnInit {
   loading: Observable<boolean>;
+
+  title = "FINRISK";
+  favicon = "https://img.icons8.com/?size=33&id=JF6kPfhVzeVz&format=png&color=008000";
 
   constructor(
     private progressBarService: ProgressBarService,
     private authService: AuthService) {
     this.loading = this.progressBarService.loading$;
+  }
+
+  ngOnInit(): void {
+    const firstPath = window.location.pathname.split('/')[1];
+    if (firstPath === 'finrisk') {
+      this.title = "FINRISK";
+      this.favicon = "https://img.icons8.com/?size=33&id=JF6kPfhVzeVz&format=png&color=008000";
+    } else if (firstPath === 'finbil') {
+      this.title = "FINBIL";
+      this.favicon = "https://img.icons8.com/?size=33&id=Wq62foDY9ZbH&format=png&color=000000";
+    }
   }
 
   logout() {

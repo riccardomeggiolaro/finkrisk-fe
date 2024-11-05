@@ -8,7 +8,7 @@ export const loggedGuard: CanActivateFn = (route, state) => {
   const authSrv = inject(AuthService);
 
   if (authSrv.isLoggedIn()) {
-    router.navigate(['/dashboard']); // Reindirizza l'utente se è già autenticato
+    router.navigate(['/:app/dashboard']); // Reindirizza l'utente se è già autenticato
     return false; // Blocca l'accesso alla pagina di login
   } else {
     return true; // Consenti l'accesso alla pagina di login

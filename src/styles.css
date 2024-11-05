@@ -35,11 +35,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: var(--secondary-color) !important;
 }
 
-/* Rimuove l'icona di errore */
-.mat-form-field-appearance-outline .mat-form-field-subscript-wrapper {
-  padding: 0 !important;
-}
-
 .mat-error {
   display: none !important;
 }

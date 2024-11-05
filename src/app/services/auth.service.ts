@@ -75,7 +75,7 @@ export class AuthService {
   logout() {
     this.jwtSrv.removeToken();
     this._currentUser$.next(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/:app/login']);
   }
 
   private error(err: HttpErrorResponse){

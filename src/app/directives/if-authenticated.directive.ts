@@ -32,7 +32,7 @@ export class IfAuthenticatedDirective implements OnInit, OnDestroy {
   }
 
   private updateView() {
-    if (this.authSrv.isLoggedIn()) {
+    if (this.authSrv.isLoggedIn() && window.location.pathname !== '/') {
       if(this.justCreated === false){
         this.viewContainer.createEmbeddedView(this.templateRef);
         this.justCreated = true;

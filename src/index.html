@@ -2,18 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Finrisk File Uploader</title>
+  <title id="title"></title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="https://img.icons8.com/?size=33&id=JF6kPfhVzeVz&format=png&color=008000">
+  <link rel="icon" type="image/x-icon" id="favicon">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body class="mat-typography">
   <app-root></app-root>
+
+  <script>
+    // Ottieni la prima parte della path dalla URL
+    const firstPath = window.location.pathname.split('/')[1];
+
+    const title = document.getElementById('title');
+
+    // Trova l'elemento favicon
+    const favicon = document.getElementById('favicon');
+
+    // Imposta la favicon in base alla prima parte della path
+    if (firstPath === 'finrisk') {
+      title.textContent = 'Finrisk File Uploader';
+      favicon.href = "https://img.icons8.com/?size=33&id=JF6kPfhVzeVz&format=png&color=008000";
+      document.documentElement.style.setProperty('--primary-color', '#008000');
+      document.documentElement.style.setProperty('--fifth-color', 'rgb(158, 223, 168)');
+    } else if (firstPath === 'finbil') {
+      title.textContent = 'Finbil File Uploader';
+      favicon.href = "https://img.icons8.com/?size=33&id=Wq62foDY9ZbH&format=png&color=000000";
+      document.documentElement.style.setProperty('--primary-color', 'rgb(82,129,224)');
+      document.documentElement.style.setProperty('--fifth-color', 'rgb(82,129,224)');
+    }
+  </script>
 </body>
 </html>
-
-<!--
-  https://img.icons8.com/?size=33&id=Wq62foDY9ZbH&format=png&color=000000
--->

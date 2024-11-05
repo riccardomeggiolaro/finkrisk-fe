@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, catchError } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
@@ -35,7 +35,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   providers: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  title = "FINRISK";
+
   loginForm = this.fb.group({
     username: [null, {validators: Validators.required}],
     password: [null, {validators: Validators.required}]
@@ -65,6 +67,15 @@ export class LoginComponent {
               private dialogSrv: DialogService,
               private router: Router,
               private snackbar: MatSnackBar) { }
+
+  ngOnInit(): void {
+    const firstPath = window.location.pathname.split('/')[1];
+    if (firstPath === 'finrisk') {
+      this.title = "FINRISK";
+    } else if (firstPath === 'finbil') {
+      this.title = "FINBIL";
+    }
+  }
 
   ngOnDestroy(): void {
     this.destroyed$.next();
@@ -140,7 +151,7 @@ export class LoginComponent {
       })
     )
     .subscribe(_ => {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/:app/dashboard']);
     })
   }
 
