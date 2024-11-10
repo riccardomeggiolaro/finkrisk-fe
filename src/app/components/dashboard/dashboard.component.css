@@ -72,9 +72,9 @@ table {
     height: 28px !important;
 }
 
-::ng-deep mat-form-field{
-   margin-bottom: -1.25em;
-}
+:host ::ng-deep mat-form-field {
+    margin-bottom: -1.25em;
+}  
 
 mat-radio-group {
     padding: 3.3px;
@@ -90,11 +90,6 @@ mat-radio-group {
 
 a {
     background-color: var(--secondary-color);
-}
-
-::ng-deep .mat-mdc-menu-panel {
-    background-color: var(--secondary-color) !important;
-    border-radius: 28px !important;
 }
 
 .space-from-left {

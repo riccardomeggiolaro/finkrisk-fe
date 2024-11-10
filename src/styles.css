@@ -21,6 +21,11 @@
   .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
     color: var(--primary-color);
   }
+
+  .mat-mdc-menu-panel {
+    background-color: var(--secondary-color) !important;
+    border-radius: 28px !important;
+  }  
 }
 
 html, body { height: 100%; }
@@ -52,8 +57,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   border: 2px solid var(--primary-color);
 }
 
-::ng-deep .mat-form-field-outline {
-  color: var(--primary-color) !important;
+.mat-mdc-menu-panel {
+  background-color: var(--secondary-color) !important;
+  border-radius: 28px !important;
 }
 
 button.mdc-fab.mat-mdc-fab-base.mdc-fab--mini.mat-mdc-mini-fab.mat-accent.mat-mdc-button-base:enabled {
