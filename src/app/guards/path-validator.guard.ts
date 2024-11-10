@@ -12,8 +12,6 @@ export class PathValidatorGuard implements CanActivate {
     ) {}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        console.log("ojrjfojno")
-
         const app = route.paramMap.get('app');
         const currentUrl = state.url;
         
